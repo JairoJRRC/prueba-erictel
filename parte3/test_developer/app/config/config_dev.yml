@@ -39,3 +39,13 @@ monolog:
 
 #swiftmailer:
 #    delivery_addresses: ['me@example.com']
+#doctrine_mongodb:
+#    default_commit_options: ~
+#    connections:
+#        default:
+#            server: "%mongodb_server%"
+#            options: {}
+#    default_database: hello_%kernel.environment%
+#    document_managers:
+#        default:
+#            auto_mapping: true
