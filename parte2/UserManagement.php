@@ -45,7 +45,6 @@ function insertUser(InputForm $input)
 
     $connectionInfo = array("Database" => "DB_ERICTEL", "UID" => $_SESSION['user'], "PWD" => $_SESSION['password']);
     $conn = sqlsrv_connect($_SESSION['serverName'], $connectionInfo);
-    $_SESSION['conexionBD'] = $conn;
     $sql = sprintf("insert into usuario_datos(name, last_name, city, email, cellphone, birth_date) values ('%s', '%s', '%s', '%s', %s, %s)",
         $input->name, $input->lastName, $input->city, $input->email, $input->cellphone, $input->birthDate);
 

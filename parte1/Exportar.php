@@ -1,5 +1,8 @@
 <?php
-var_dump($_POST['export']);exit;
+session_start();
+if(isset($_REQUEST['export'])) {
+    export();
+}
 function cleanData(&$str)
 {
     $str = preg_replace("/\t/", "\\t", $str);
@@ -9,20 +12,25 @@ function cleanData(&$str)
     }
 }
 
+function export() {
+    $filename = "data_" . date('Ymd') . ".xls";
 
-$filename = "website_data_" . date('Ymd') . ".xls";
+    header("Content-Disposition: attachment; filename=\"$filename\"");
+    header("Content-Type: application/vnd.ms-excel");
 
-header("Content-Disposition: attachment; filename=\"$filename\"");
-header("Content-Type: application/vnd.ms-excel");
-$data = $_POST['exportData'];
-$flag = false;
-foreach ($data as $row) {
-    if (!$flag) {
-        echo implode("\t", array_keys($row)) . "\r\n";
-        $flag = true;
+    $connectionInfo = array("Database" => "DB_ERICTEL", "UID" => $_SESSION['user'], "PWD" => $_SESSION['password']);
+    $conn = sqlsrv_connect($_SESSION['serverName'], $connectionInfo);
+
+    $result = sqlsrv_query($conn,"SELECT * FROM TB_USUARIO ORDER BY id");
+    $flag = false;
+    while($row =  sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
+        if(!$flag) {
+            echo implode("\t", array_keys($row)) . "\n";
+            $flag = true;
+        }
+        array_walk($row, 'cleanData');
+        echo implode("\t", array_values($row)) . "\n";
     }
-    array_walk($row, __NAMESPACE__ . '\cleanData');
-    echo implode("\t", array_values($row)) . "\r\n";
 }
 exit;
 ?>

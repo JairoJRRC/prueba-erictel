@@ -108,7 +108,7 @@ if (!isset($_SESSION['connection'])) {
         </div>
     </div>
     <form action="Exportar.php" method="POST">
-        <button type="submit" class="btn btn-primary" name="export[]" value=<?php print_r($exportData)?>Exportar Excel</button>
+        <button type="submit" class="btn btn-primary" name="export">Exportar Excel</button>
     </form>
     <?php
 }
