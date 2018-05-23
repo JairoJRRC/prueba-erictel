@@ -1,4 +1,7 @@
-<?php session_start(); ?>
+<?php
+    include_once(realpath(dirname(__FILE__)  . DIRECTORY_SEPARATOR . '..') . DIRECTORY_SEPARATOR . "Controller/UserController.php");
+    $controller = new UserController();
+ ?>
 <html>
 <head>
     <title>Erictel</title>
@@ -25,72 +28,49 @@
                         <thead>
                         <tr class=”text-primary”>
                             <th>#</th>
-                            <th>Id</th>
                             <th>Nombres</th>
                             <th>Apellidos</th>
                             <th>Ciudad</th>
-                            <th>Correo</th>
-                            <th>Telefono</th>
+                            <th>Email</th>
+                            <th>Celular</th>
                             <th>Fecha de nacimiento</th>
-                            <th></th>
-                            <th></th>
                         </tr>
                         </thead>
                         <?php
-                        $exportData = [];
-                        $sql = "SELECT * from usuario_datos";
-                        $connectionInfo = array(
-                            "Database" => "DB_ERICTEL",
-                            "UID" => $_SESSION['user'],
-                            "PWD" => $_SESSION['password']
-                        );
-                        $conn = sqlsrv_connect($_SESSION['serverName'], $connectionInfo);
-                        $stmt = sqlsrv_query($conn, $sql);
 
-                        if ($stmt === false) {
-                            die(print_r(sqlsrv_errors(), true));
-                        }
-
-                        while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+                        $listUser = $controller->getAll();
+                        $count = 1;
+                        /** @var  UserEntity $user */
+                        foreach ($listUser as $user){
 
                             ?>
                             <tbody>
                             <tr>
-                                <th scope="row">
-                                </th>
-                                <td>
-                                    <?php echo $row['id']; ?>
-                                </td>
-                                <td>
-                                    <?php echo utf8_decode($row['name']); ?>
-                                </td>
-                                <td>
-                                    <?php echo utf8_decode($row['last_name']); ?>
-                                </td>
-                                <td>
-                                    <?php echo $row['city']; ?>
-                                </td>
-                                <td>
-                                    <?php echo $row['email']; ?>
-                                </td>
-                                <td>
-                                    <?php echo $row['cellphone']; ?>
-                                </td>
-                                <td>
-                                    <?php echo $row['birth_date']; ?>
-                                </td>
-                                <td>
 
-                                    <a href=<?php echo "formulario.php?id=" . $row['id'] . ""; ?> class="btn btn-info
-                                       btn-md" role="button">Editar</a>
-                                    <a href=<?php echo "../UserManagement.php?delete=true&id=" . $row['id'] . ""; ?> class="btn
-                                       btn-danger btn-md" role="button">Eliminar</a>
-
+                                <td>
+                                    <?php echo $count++; ?>
+                                </td>
+                                <td>
+                                    <?php echo $user->getName(); ?>
+                                </td>
+                                <td>
+                                    <?php echo $user->getLastName(); ?>
+                                </td>
+                                <td>
+                                    <?php echo $user->getCity(); ?>
+                                </td>
+                                <td>
+                                    <?php echo $user->getEmail(); ?>
+                                </td>
+                                <td>
+                                    <?php echo $user->getCellphone(); ?>
+                                </td>
+                                <td>
+                                    <?php echo $user->getBirthDateFormat(); ?>
                                 </td>
                             </tr>
                             </tbody>
                             <?php
-                            $exportData[] = $row;
                         }
 
                         ?>
@@ -100,3 +80,10 @@
         </div>
     </div>
 </div>
+<form action="Export.php" class="inline">
+    <button type="submit" class="btn btn-primary">Exportar Excel</button>
+</form>
+
+
+</body>
+</html>

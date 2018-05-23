@@ -4,6 +4,10 @@ namespace FormBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use Doctrine\ODM\MongoDB\Mapping\Annotations\Id;
+use FormBundle\Document\Input\EmailInput;
+use FormBundle\Document\Input\MessageInput;
+use FormBundle\Document\Input\NameInput;
+use FormBundle\Document\Input\PhoneInput;
 
 /**
  * @MongoDB\Document
@@ -34,6 +38,25 @@ class DataForm
      * @MongoDB\Field(type="string")
      */
     protected $message;
+
+    /**
+     * @param NameInput $name
+     * @param EmailInput $email
+     * @param PhoneInput $phone
+     * @param MessageInput $message
+     * @param null $id
+     * @return DataForm
+     */
+    public static function create(NameInput $name, EmailInput $email, PhoneInput $phone, MessageInput $message, $id = null)
+    {
+        $obj = new DataForm();
+        $obj->id = $id;
+        $obj->name = $name->get();
+        $obj->email = $email->get();
+        $obj->phone = $phone->get();
+        $obj->message = $message->get();
+        return $obj;
+    }
 
     /**
      * @return mixed
@@ -114,4 +137,6 @@ class DataForm
     {
         $this->message = $message;
     }
+
+
 }

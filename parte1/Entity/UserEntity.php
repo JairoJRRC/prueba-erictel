@@ -37,12 +37,12 @@ class UserEntity
     ) {
         $object = new UserEntity();
         $object->id = $id;
-        $object->name = $name;
-        $object->lastName = $lastName;
-        $object->city = $city;
-        $object->email = $email;
-        $object->cellphone = $cellphone;
-        $object->birthDate = $birthDate;
+        $object->name = $name->getName();
+        $object->lastName = $lastName->getLastName();
+        $object->city = $city->getCity();
+        $object->email = $email->getEmail();
+        $object->cellphone = $cellphone->getPhone();
+        $object->birthDate = $birthDate->getBirthDate();
         return $object;
     }
 
@@ -168,5 +168,24 @@ class UserEntity
             'cellphone' => $this->getCellphone(),
             'birth_date' => $this->getBirthDate()
         ];
+    }
+
+    public function getBirthDateFormat()
+    {
+        $mes = $this->getMonth()[date("n", $this->birthDate)-1];
+        return ($mes . date(" j \d\\e Y", $this->birthDate));
+    }
+
+    /**
+     * @param $date
+     * @return false|string
+     */
+    public function changeFormat($date) {
+        return gmdate("d/m/Y", $date);
+    }
+
+    public function getMonth()
+    {
+        return ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
     }
 }

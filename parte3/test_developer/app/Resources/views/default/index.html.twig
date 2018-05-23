@@ -1,6 +1,14 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+    <div class="alert alert-success" ng-show="{[{ status }]}">
+        <a href="#" class="alert-link" >Los datos fueron registrados correctamente.</a>
+    </div>
+
+    <div class="alert alert-danger" ng-show="{[{ status === 'nook' }]}">
+        <a href="#" class="alert-link" >Los datos fueron registrados correctamente.</a>
+    </div>
+
     <div class="panel-body" ng-controller="ControladorPrincipal">
         <div class="col-md-6 col-md-offset-3">
             <form method="POST">
@@ -29,18 +37,26 @@
     <script>
         angular
             .module("formularios", [])
+            .config(function($interpolateProvider){
+                $interpolateProvider.startSymbol('{[{').endSymbol('}]}');
+            })
             .controller("ControladorPrincipal", ["$scope", "$http", function($scope, $http){
                 $scope.form = {};
-
+                $scope.status = false;
                 $scope.guardar = function(){
-                    console.log($scope.form);
                     $http.post("http://localhost:8000/guardar", angular.toJson($scope.form))
                         .then(function(respuesta){
 
-                            console.log("Petición terminada. La respuesta es: ", angular.fromJson(respuesta.data));
-
+                            console.log(respuesta.status);
+                            if(respuesta.status == 200){
+                                $scope.status = true;
+                            }else{
+                                $scope.status = 'nook';
+                            }
                             $scope.form = {};
-                        });
+                        }).error(function (respuesta) {
+                        $scope.status = 'nook';
+                    });
                 };
             }]);
     </script>

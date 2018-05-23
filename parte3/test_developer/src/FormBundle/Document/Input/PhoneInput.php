@@ -1,20 +1,19 @@
 <?php
+
+namespace FormBundle\Document\Input;
+
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+
 /**
  * Created by PhpStorm.
  * User: jairo
  * Date: 23/05/2018
- * Time: 2:11 AM
+ * Time: 6:55 AM
  */
-
-class CellPhoneInput
+class PhoneInput
 {
-    public $phone;
+    protected $phone;
 
-    /**
-     * CellPhoneInput constructor.
-     * @param $phone
-     * @throws Exception
-     */
     public function __construct($phone)
     {
         $this->phone = $phone;
@@ -22,22 +21,18 @@ class CellPhoneInput
         return $this->phone;
     }
 
-    /**
-     * @throws Exception
-     */
     public function convert()
     {
         if (!is_numeric($this->phone)) {
-            throw new \Exception('El telefono indicado no es numérico.');
+            throw new BadRequestHttpException("El numero telefónico no es válido.");
         }
     }
 
     /**
      * @return mixed
      */
-    public function getPhone()
+    public function get()
     {
         return $this->phone;
     }
-
 }

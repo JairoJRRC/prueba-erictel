@@ -8,5 +8,19 @@
 
 class CityInput
 {
+    public $city;
 
+    public function __construct($city)
+    {
+        $this->city = $city;
+        return $this->city;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCity()
+    {
+        return $this->city;
+    }
 }

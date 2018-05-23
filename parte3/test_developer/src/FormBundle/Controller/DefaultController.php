@@ -3,6 +3,10 @@
 namespace FormBundle\Controller;
 
 use FormBundle\Document\DataForm;
+use FormBundle\Document\Input\EmailInput;
+use FormBundle\Document\Input\MessageInput;
+use FormBundle\Document\Input\NameInput;
+use FormBundle\Document\Input\PhoneInput;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -31,11 +35,12 @@ class DefaultController extends Controller
     {
         $data = json_decode($request->getContent(), true);
 
-        $dataForm = new DataForm();
-        $dataForm->setName($data['name']);
-        $dataForm->setEmail($data['email']);
-        $dataForm->setPhone($data['phone']);
-        $dataForm->setMessage($data['message']);
+        $dataForm = DataForm::create(
+            new NameInput($data['name']),
+            new EmailInput($data['email']),
+            new PhoneInput($data['phone']),
+            new MessageInput($data['message'])
+        );
 
         $dm = $this->get('doctrine_mongodb')->getManager();
         $dm->persist($dataForm);

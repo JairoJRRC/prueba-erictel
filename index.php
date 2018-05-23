@@ -1,6 +1,3 @@
-<?php
-include('parte2/config.php');
-session_start(); ?>
 <html>
 <head>
     <title>Erictel</title>
@@ -17,73 +14,14 @@ session_start(); ?>
             crossorigin="anonymous"></script>
 </head>
 <body>
-<?php
+<ul class="nav nav-pills nav-fill">
+    <li class="nav-item">
+        <a class="nav-link active" href="parte1/View/Index.php">Listado - pregunta 1</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="parte2/View/Index.php">Formulario -pregunta 2</a>
+    </li>
+</ul>
 
-if (isset($_POST['submit'])) {
-
-    $config = Config::config(
-        $_POST['serverName'],
-        $_POST['user'],
-        $_POST['password']
-    );
-
-    $_SESSION['connection'] = true;
-    $_SESSION['serverName'] = $_POST['serverName'];
-    $_SESSION['user'] = $_POST['user'];
-    $_SESSION['password'] = $_POST['password'];
-
-}
-
-if (!isset($_SESSION['connection'])) {
-    echo "<script type='text/javascript'>
-          $(document).ready(function(){
-          $('#exampleModalCenter').modal('show');
-          });
-          </script>";
-} else {
-
-    ?>
-    <ul class="nav nav-pills nav-fill">
-        <li class="nav-item">
-            <a class="nav-link active" href="parte1/Table.php">Listado - pregunta 1</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="parte2/views/formulario.php">Formulario -pregunta 2</a>
-        </li>
-    </ul>
-
-    <?php
-}
-?>
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-     aria-hidden="true" data-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalCenterTitle">Ingrese sus datos de conexion:</h5>
-            </div>
-            <div class="modal-body">
-                <form method="POST">
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Server:</label>
-                        <input type="text" class="form-control" id="exampleInputEmail1" name="serverName">
-                    </div>
-                    <div class="form-group">
-                        <label for="a">User:</label>
-                        <input type="text" class="form-control" id="a" name="user">
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputPassword1">Password:</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1" name="password"
-                               placeholder="Password">
-                    </div>
-                    <button type="submit" class="btn btn-primary" name="submit">Guardar</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 </body>
 </html>
