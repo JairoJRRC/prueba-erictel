@@ -16,37 +16,8 @@
 </head>
 <body>
 <?php
-include("config.php");
-if (isset($_POST['submit'])) {
-    createConnection();
-}
-
-function createConnection()
-{
-    $config = new Config(
-        $_POST['serverName'],
-        $_POST['user'],
-        $_POST['password']
-    );
-
-    $_SESSION['connection'] = true;
-    $_SESSION['serverName'] = $_POST['serverName'];
-    $_SESSION['user'] = $_POST['user'];
-    $_SESSION['password'] = $_POST['password'];
-}
-
-if (!isset($_SESSION['connection'])) {
-    echo "<script type='text/javascript'>
-					$(document).ready(function(){
-					$('#exampleModalCenter').modal('show');
-					});
-					</script>";
-} else {
-    $config = new Config(
-        $_SESSION['serverName'],
-        $_SESSION['user'],
-        $_SESSION['password']
-    );
+    include ('ConnectMongoDB.php');
+    $controller = new ConnectMongoDB();
     ?>
 
     <div class="col-lg-10 offset-lg-2" content-wrapper”>
@@ -59,45 +30,49 @@ if (!isset($_SESSION['connection'])) {
                             <thead>
                             <tr class=”text-primary”>
                                 <th>#</th>
-                                <th>Name</th>
-                                <th>Email ID</th>
-                                <th>Customer ID</th>
-                                <th>Country</th>
+                                <th>Nombres</th>
+                                <th>Apellidos</th>
+                                <th>Ciudad</th>
+                                <th>Email</th>
+                                <th>Celular</th>
+                                <th>Fecha de nacimiento</th>
                             </tr>
                             </thead>
                             <?php
-                            $exportData = [];
-                            $sql = "SELECT * from TB_USUARIO";
 
-                            $stmt = sqlsrv_query($config->conn, $sql);
-
-                            if ($stmt === false) {
-                                die(print_r(sqlsrv_errors(), true));
-                            }
-
-                            while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+                                $listUser = $controller->getAll();
+                                $count = 1;
+                            /** @var  UserEntity $user */
+                            foreach ($listUser as $user){
 
                                 ?>
                                 <tbody>
                                 <tr>
-                                    <th scope="row">
-                                    </th>
+
                                     <td>
-                                        <?php echo $row['id']; ?>
+                                        <?php echo $count++; ?>
                                     </td>
                                     <td>
-                                        <?php echo $row['name']; ?>
+                                        <?php echo $user->getName(); ?>
                                     </td>
                                     <td>
-                                        <?php echo $row['last_name']; ?>
+                                        <?php echo $user->getLastName(); ?>
                                     </td>
                                     <td>
-                                        <?php echo $row['address']; ?>
+                                        <?php echo $user->getCity(); ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $user->getEmail(); ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $user->getCellphone(); ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $user->getBirthDate(); ?>
                                     </td>
                                 </tr>
                                 </tbody>
                                 <?php
-                                $exportData[] = $row;
                             }
 
                             ?>
@@ -110,38 +85,6 @@ if (!isset($_SESSION['connection'])) {
     <form action="Exportar.php" method="POST">
         <button type="submit" class="btn btn-primary" name="export">Exportar Excel</button>
     </form>
-    <?php
-}
-?>
 
-<!-- Modal -->
-<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-     aria-hidden="true" data-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalCenterTitle">Ingrese sus datos de conexion:</h5>
-            </div>
-            <div class="modal-body">
-                <form method="POST">
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Server:</label>
-                        <input type="text" class="form-control" id="exampleInputEmail1" name="serverName">
-                    </div>
-                    <div class="form-group">
-                        <label for="a">User:</label>
-                        <input type="text" class="form-control" id="a" name="user">
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputPassword1">Password:</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1" name="password"
-                               placeholder="Password">
-                    </div>
-                    <button type="submit" class="btn btn-primary" name="submit">Guardar</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 </body>
 </html>
